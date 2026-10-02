@@ -1,0 +1,24 @@
+name: Cloud Video Downloader
+
+on:
+  workflow_dispatch:
+    inputs:
+      video_url:
+        description: 'لینک ویدیو را وارد کنید'
+        required: true
+        type: string
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install yt-dlp and ffmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+          pip install yt-dlp
+
+      - name: Download Video
+        run: |
+          yt-dlp -f "bestvideo+bestaudio/best" --merge-output-format mp4 -o "%(title)s.%(ext)s" "${{ github.event.inputs.video_url }}"
